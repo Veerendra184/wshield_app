@@ -140,6 +140,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 }
-git add .  
-git commit -m "Added registartion page"
-git push origin mainn
