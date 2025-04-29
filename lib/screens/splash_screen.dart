@@ -10,18 +10,17 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-void initState() {
-  super.initState();
-  Future.delayed(const Duration(seconds: 7), () {
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
-  });
-}
-
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 7), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +29,18 @@ void initState() {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.shield, color: Colors.white, size: 100),
+          children: const [
+            Icon(Icons.shield, size: 100, color: Colors.white),
             SizedBox(height: 20),
             Text(
               "WSHIELD",
-              style: TextStyle(
-                  fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             SizedBox(height: 10),
-            Text(
-              "Your Safety, On-Demand",
-              style: TextStyle(fontSize: 16, color: Colors.white70),
-            ),
+            Text("Your Safety, On-Demand", style: TextStyle(color: Colors.white70)),
           ],
         ),
       ),
     );
   }
 }
-

@@ -55,6 +55,10 @@ flutter:
 
   assets:
     - lib/assets/bg_black_white.png
+    - lib/assets/bodyguard.png
+    - lib/assets/drone.png
+
+    
 
 
   # The following line ensures that the Material Icons font is
