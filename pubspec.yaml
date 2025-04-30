@@ -56,7 +56,11 @@ flutter:
   assets:
     - lib/assets/bg_black_white.png
     - lib/assets/bodyguard.png
+    - lib/assets/bodyguard_detail.png
     - lib/assets/drone.png
+    - lib/assets/drone_detail.png
+    - lib/assets/bag.png
+    - lib/assets/bag_detail.png
 
     
 
