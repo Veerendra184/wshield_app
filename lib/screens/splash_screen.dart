@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 7), () {
+    Future.delayed(const Duration(seconds: 17), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -30,14 +30,15 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.shield, size: 100, color: Colors.white),
-            SizedBox(height: 20),
-            Text(
-              "WSHIELD",
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+            // Logo Image
+            Image(
+              image: AssetImage('lib/assets/logo.png'),
+              width: 160,
+              height: 160,
             ),
-            SizedBox(height: 10),
-            Text("Your Safety, On-Demand", style: TextStyle(color: Colors.white70)),
+            SizedBox(height: 16),
+
+            // Tagline Text (directly below image)
           ],
         ),
       ),

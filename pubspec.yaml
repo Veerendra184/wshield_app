@@ -61,6 +61,7 @@ flutter:
     - lib/assets/drone_detail.png
     - lib/assets/bag.png
     - lib/assets/bag_detail.png
+    - lib/assets/logo.png
 
     
 
