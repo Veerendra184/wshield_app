@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'PreBookBodyguardPage.dart'; // Make sure this import matches your file name
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,15 +14,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final List<Map<String, String>> slides = [
     {
       'image': 'lib/assets/bodyguard_detail.png',
-      'desc': 'Bodyguard Service - Ever felt unsafe walking alone at night in the city? Just pre-book a trained WSHIELD bodyguard from our app. Dont want them beside you? No problem — they can monitor you from a distance. Stay safe without feeling watched.',
+      'desc':
+          'Bodyguard Service - Ever felt unsafe walking alone at night in the city? Just pre-book a trained WSHIELD bodyguard from our app. Dont want them beside you? No problem — they can monitor you from a distance. Stay safe without feeling watched.',
     },
     {
       'image': 'lib/assets/drone_detail.png',
-      'desc': " Drone Surveillance - What if no one can reach you in time? Our drone follows you silently, capturing live footage from above. If danger is sensed, Drone Will be Reacting to it. Aerial eyes when your'e truly alone.",
+      'desc':
+          " Drone Surveillance - What if no one can reach you in time? Our drone follows you silently, capturing live footage from above. If danger is sensed, Drone Will be Reacting to it. Aerial eyes when your'e truly alone.",
     },
     {
       'image': 'lib/assets/bag_detail.png',
-      'desc': 'Smart Safety Bag - Who helps you when no one’s around — and no proof exists? Our bag includes a 360° camera + hidden panic button.One press alerts nearby WSHIELD volunteers.It captures real-time footage — useful for social proof and legal steps.',
+      'desc':
+          'Smart Safety Bag - Who helps you when no one’s around — and no proof exists? Our bag includes a 360° camera + hidden panic button.One press alerts nearby WSHIELD volunteers.It captures real-time footage — useful for social proof and legal steps.',
     },
   ];
 
@@ -52,17 +56,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 20),
 
-          // Image
+          // 👉 Image wrapped with GestureDetector
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: SizedBox(
-                height: screenHeight * 0.5,
-                width: double.infinity,
-                child: Image.asset(
-                  currentSlide['image']!,
-                  fit: BoxFit.cover,
+            child: GestureDetector(
+              onTap: () {
+                if (_currentIndex == 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PreBookBodyguardPage()),
+                  );
+                }
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: SizedBox(
+                  height: screenHeight * 0.5,
+                  width: double.infinity,
+                  child: Image.asset(
+                    currentSlide['image']!,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -77,7 +91,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   const SizedBox(height: 20),
 
-                  // Description
                   Text(
                     currentSlide['desc']!,
                     textAlign: TextAlign.center,
@@ -91,7 +104,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   const SizedBox(height: 30),
 
-                  // 🔘 Slide Indicator Dashes
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(slides.length, (index) {
@@ -110,7 +122,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   const SizedBox(height: 30),
 
-                  // ✅ NEXT Button
                   ElevatedButton(
                     onPressed: _goToNext,
                     style: ElevatedButton.styleFrom(
