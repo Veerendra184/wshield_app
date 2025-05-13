@@ -11,10 +11,11 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
   String? selectedTime;
   DateTime? selectedDate;
   String selectedLocation = '';
+
   List<Map<String, String>> bodyguards = [
-    {"name": "Raj Verma", "rating": "4.8", "image": "assets/bg1.png"},
-    {"name": "Amit Rana", "rating": "4.6", "image": "assets/bg2.png"},
-    {"name": "Surya Patil", "rating": "4.9", "image": "assets/bg3.png"},
+    {"name": "Raj Verma", "rating": "4.8", "image": "lib/assets/bg1.png"},
+    {"name": "Radha", "rating": "4.6", "image": "lib/assets/bg2.png"},
+    {"name": "Surya Patil", "rating": "4.9", "image": "lib/assets/bg3.png"},
   ];
 
   void _pickDate() async {
@@ -23,6 +24,12 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark(), // Dark date picker
+          child: child!,
+        );
+      },
     );
     if (picked != null) setState(() => selectedDate = picked);
   }
@@ -31,6 +38,12 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
     TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark(), // Dark time picker
+          child: child!,
+        );
+      },
     );
     if (picked != null) setState(() => selectedTime = picked.format(context));
   }
@@ -39,12 +52,13 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text("Booking Confirmed"),
-        content: Text("You’ve booked $name successfully."),
+        backgroundColor: Colors.black,
+        title: const Text("Booking Confirmed", style: TextStyle(color: Colors.white)),
+        content: Text("You’ve booked $name successfully.", style: TextStyle(color: Colors.white70)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
+            child: const Text("OK", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -53,16 +67,27 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
 
   Widget buildBodyguardCard(Map<String, String> bg) {
     return Card(
-      elevation: 3,
+      color: Colors.grey[900],
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         leading: CircleAvatar(
           backgroundImage: AssetImage(bg['image']!),
         ),
-        title: Text(bg['name']!),
-        subtitle: Text("⭐ ${bg['rating']}"),
+        title: Text(
+          bg['name']!,
+          style: const TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(
+          "⭐ ${bg['rating']}",
+          style: const TextStyle(color: Colors.white70),
+        ),
         trailing: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+          ),
           onPressed: () => _bookBodyguard(bg['name']!),
-          child: Text("Book"),
+          child: const Text("Book"),
         ),
       ),
     );
@@ -71,38 +96,79 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("Pre-Book Bodyguard"),
+        title: const Text("Pre-Book Bodyguard"),
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: "Enter Location",
-                border: OutlineInputBorder(),
+                labelStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.grey[850],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white30),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               onChanged: (value) => selectedLocation = value,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: _pickDate,
-                  child: Text(selectedDate != null
-                      ? selectedDate.toString().split(' ')[0]
-                      : "Pick Date"),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _pickDate,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: Text(selectedDate != null
+                        ? selectedDate.toString().split(' ')[0]
+                        : "Pick Date"),
+                  ),
                 ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _pickTime,
-                  child: Text(selectedTime ?? "Pick Time"),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _pickTime,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: Text(selectedTime ?? "Pick Time"),
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            const Text(
+              "Available Bodyguards",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView(
                 children: bodyguards.map(buildBodyguardCard).toList(),
