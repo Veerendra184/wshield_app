@@ -17,15 +17,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       'desc':
           'Bodyguard Service - Ever felt unsafe walking alone at night in the city? Just pre-book a trained WSHIELD bodyguard from our app. Dont want them beside you? No problem — they can monitor you from a distance. Stay safe without feeling watched.',
     },
+    { 
+      'image': 'lib/assets/bag_detail.png',
+      'desc':
+          'Smart Safety Bag - Who helps you when no one’s around — and no proof exists? Our bag includes a 360° camera + hidden panic button.One press alerts nearby WSHIELD volunteers.It captures real-time footage — useful for social proof and legal steps.',
+      
+    },
     {
       'image': 'lib/assets/drone_detail.png',
       'desc':
           " Drone Surveillance - What if no one can reach you in time? Our drone follows you silently, capturing live footage from above. If danger is sensed, Drone Will be Reacting to it. Aerial eyes when your'e truly alone.",
-    },
-    {
-      'image': 'lib/assets/bag_detail.png',
-      'desc':
-          'Smart Safety Bag - Who helps you when no one’s around — and no proof exists? Our bag includes a 360° camera + hidden panic button.One press alerts nearby WSHIELD volunteers.It captures real-time footage — useful for social proof and legal steps.',
     },
   ];
 
