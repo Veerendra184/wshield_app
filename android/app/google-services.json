@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "207592702800",
+    "project_id": "wshieldtracking",
+    "storage_bucket": "wshieldtracking.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:207592702800:android:63ea557885b6866e82a255",
+        "android_client_info": {
+          "package_name": "com.example.wshield_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAigTAv66MlT_HOD8uZZd0FxAMQqJCDB6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
