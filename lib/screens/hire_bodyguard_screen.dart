@@ -12,5 +12,6 @@ class HireBodyguardScreen extends StatelessWidget {
         child: Text("Bodyguard Booking Page (Coming Soon)", style: TextStyle(color: Colors.white)),
       ),
     );
+    
   }
 }

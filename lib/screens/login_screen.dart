@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'register_screen.dart';
 import 'dashboard_screen.dart';
 
@@ -12,22 +13,36 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;
 
-  // Note: Will replace this with Firebase login later.
-  void _login() {
+  final _auth = FirebaseAuth.instance;
+
+  void _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (email.isNotEmpty && password.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardScreen()),
-      );
-    } else {
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter email and password")),
       );
+      return;
     }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Login failed")),
+      );
+    }
+
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -61,15 +76,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: _buildInput("Password"),
                   ),
                   const SizedBox(height: 30),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    ),
-                    onPressed: _login,
-                    child: const Text('Login'),
-                  ),
+                  _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                          ),
+                          onPressed: _login,
+                          child: const Text('Login'),
+                        ),
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
@@ -101,3 +118,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

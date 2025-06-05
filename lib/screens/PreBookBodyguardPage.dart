@@ -11,7 +11,6 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
   String? selectedTime;
   DateTime? selectedDate;
   String selectedLocation = '';
-  bool showTracking = false;
 
   List<Map<String, String>> bodyguards = [
     {"name": "Raj Verma", "rating": "4.8", "image": "lib/assets/bg1.png"},
@@ -40,15 +39,13 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
   }
 
   void _bookAndTrack(String name) {
-    setState(() {
-      showTracking = true;
-    });
-
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Bodyguard "$name" booked. Tracking activated.'),
-      ),
+      SnackBar(content: Text('Bodyguard "$name" booked! Opening tracking...')),
     );
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      Navigator.pushNamed(context, '/live-tracking');
+    });
   }
 
   Widget buildBodyguardCard(Map<String, String> bg, {required VoidCallback onBook}) {
@@ -78,31 +75,29 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
         foregroundColor: Colors.white,
         elevation: 0,
       ),
-      body: showTracking
-          ? _buildTrackingSection()
-          : DefaultTabController(
-              length: 2,
-              child: Column(
+      body: DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            const TabBar(
+              tabs: [
+                Tab(text: "Pre-Book"),
+                Tab(text: "Within 30 Min"),
+              ],
+              labelColor: Colors.white,
+              indicatorColor: Colors.white,
+            ),
+            Expanded(
+              child: TabBarView(
                 children: [
-                  const TabBar(
-                    tabs: [
-                      Tab(text: "Pre-Book"),
-                      Tab(text: "Within 30 Min"),
-                    ],
-                    labelColor: Colors.white,
-                    indicatorColor: Colors.white,
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        _buildPreBookSection(),
-                        _buildInstantBookingSection(),
-                      ],
-                    ),
-                  ),
+                  _buildPreBookSection(),
+                  _buildInstantBookingSection(),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -188,48 +183,6 @@ class _PreBookBodyguardPageState extends State<PreBookBodyguardPage> {
           });
         }).toList(),
       ),
-    );
-  }
-
-  Widget _buildTrackingSection() {
-    return Column(
-      children: [
-        Container(
-          height: 250,
-          width: double.infinity,
-          margin: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.grey[800],
-            image: const DecorationImage(
-              image: AssetImage('lib/assets/map_placeholder.png'), // your mock map image
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            "Bodyguard is tracking you from a distance.\nIf something feels off, they’ll be there in seconds.",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70),
-          ),
-        ),
-        const SizedBox(height: 30),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-          ),
-          onPressed: () {
-            setState(() {
-              showTracking = false;
-            });
-          },
-          child: const Text("Back to Booking"),
-        )
-      ],
     );
   }
 }

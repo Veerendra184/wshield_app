@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
+
+// Screens
+import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/dashboard_screen.dart';
+import 'screens/hire_bodyguard_screen.dart';
+import 'screens/drone_surveillance_screen.dart';
+import 'screens/PreBookBodyguardPage.dart';
+import 'screens/live_tracking_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,14 +26,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WSHIELD Firebase Auth',
+      title: 'WSHIELD',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const AuthGate(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SplashScreen(),
+        '/auth': (context) => const AuthGate(),
+        '/login': (context) => const LoginScreen(),
+        '/dashboard': (context) => const DashboardScreen(),
+        '/hire-bodyguard': (context) => const HireBodyguardScreen(),
+        '/drone-surveillance': (context) => const DroneSurveillanceScreen(),
+        '/prebook-bodyguard': (context) => const PreBookBodyguardPage(),
+        '/live-tracking': (context) => const LiveTrackingScreen(),
+      },
     );
   }
 }
 
-// 🔐 Authentication Gate - Shows Login or Main Screen
+/// AuthGate - shows login or dashboard based on login status
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
@@ -39,114 +58,13 @@ class AuthGate extends StatelessWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         }
+
         if (snapshot.hasData) {
-          return const FirebaseTestScreen(); // User is signed in
+          return const DashboardScreen(); // Logged in
         } else {
-          return const LoginScreen(); // Show login screen
+          return const LoginScreen(); // Not logged in
         }
       },
-    );
-  }
-}
-
-// 🔐 Simple Login Screen (Anonymous Login)
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  void loginAnonymously(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signInAnonymously();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login failed: $e")),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => loginAnonymously(context),
-          child: const Text("Login Anonymously"),
-        ),
-      ),
-    );
-  }
-}
-
-// ✅ Your Existing Firebase Test Screen
-class FirebaseTestScreen extends StatefulWidget {
-  const FirebaseTestScreen({super.key});
-
-  @override
-  State<FirebaseTestScreen> createState() => _FirebaseTestScreenState();
-}
-
-class _FirebaseTestScreenState extends State<FirebaseTestScreen> {
-  final databaseRef = FirebaseDatabase.instance.ref("test"); // test node
-  String dataFromFirebase = "";
-
-  @override
-  void initState() {
-    super.initState();
-    readData();
-  }
-
-  void writeData() {
-    databaseRef.set({
-      'message': 'Hello from Flutter!',
-      'timestamp': DateTime.now().toString(),
-    });
-  }
-
-  void readData() {
-    databaseRef.onValue.listen((event) {
-      final data = event.snapshot.value as Map?;
-      if (data != null && mounted) {
-        setState(() {
-          dataFromFirebase = data['message'] ?? "No message";
-        });
-      }
-    });
-  }
-
-  void logout() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Firebase Realtime Test"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: logout,
-          )
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("User ID: ${user?.uid}", style: TextStyle(fontSize: 14)),
-            const SizedBox(height: 10),
-            Text("Message from Firebase:", style: TextStyle(fontSize: 16)),
-            Text(dataFromFirebase, style: TextStyle(fontSize: 20)),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: writeData,
-              child: const Text("Write to Firebase"),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

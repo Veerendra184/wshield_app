@@ -12,7 +12,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 10), () {
+    // Navigate to LoginScreen after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -30,15 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            // Logo Image
             Image(
               image: AssetImage('lib/assets/logo.png'),
               width: 160,
               height: 160,
             ),
             SizedBox(height: 16),
-
-            // Tagline Text (directly below image)
+            Text(
+              "Your Safety, Our Priority",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                letterSpacing: 1.2,
+              ),
+            ),
           ],
         ),
       ),

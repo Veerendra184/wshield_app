@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^2.32.0
   firebase_auth: ^4.17.5
   firebase_database: ^10.4.7
+  google_maps_flutter: ^2.5.0
   geolocator: ^12.0.0
 
 
@@ -72,7 +73,7 @@ flutter:
     - lib/assets/bg1.png
     - lib/assets/bg2.png
     - lib/assets/bg3.png
-
+    - lib/assets/bodyguard_marker.png
     
 
 

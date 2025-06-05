@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -9,20 +11,46 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String _gender = 'Male';
   bool _isLoading = false;
 
-  void _registerUser() {
+  final _auth = FirebaseAuth.instance;
+  final _database = FirebaseDatabase.instance.ref();
+
+  void _registerUser() async {
     setState(() => _isLoading = true);
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => _isLoading = false);
+
+    try {
+      // Create Firebase Auth User
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      final uid = userCredential.user?.uid;
+
+      // Store User Info in Realtime Database
+      await _database.child("users/$uid").set({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'gender': _gender,
+        'age': _ageController.text.trim(),
+        'created_at': DateTime.now().toIso8601String(),
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Account created successfully")),
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
-    });
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message ?? "Registration failed")));
+    }
+
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -40,22 +68,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   const Text("Create Your Account", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 30),
-                  TextField(style: const TextStyle(color: Colors.white), decoration: _input("Full Name")),
+                  TextField(controller: _nameController, style: const TextStyle(color: Colors.white), decoration: _input("Full Name")),
                   const SizedBox(height: 20),
-                  TextField(style: const TextStyle(color: Colors.white), decoration: _input("Email")),
+                  TextField(controller: _emailController, style: const TextStyle(color: Colors.white), decoration: _input("Email")),
                   const SizedBox(height: 20),
                   DropdownButtonFormField<String>(
+                    value: _gender,
                     dropdownColor: Colors.black,
                     decoration: _input("Gender"),
                     items: ['Male', 'Female', 'Other']
                         .map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(color: Colors.white))))
                         .toList(),
-                    onChanged: (_) {},
+                    onChanged: (val) => setState(() => _gender = val!),
                   ),
                   const SizedBox(height: 20),
-                  TextField(style: const TextStyle(color: Colors.white), keyboardType: TextInputType.number, decoration: _input("Age")),
+                  TextField(controller: _ageController, style: const TextStyle(color: Colors.white), keyboardType: TextInputType.number, decoration: _input("Age")),
                   const SizedBox(height: 20),
-                  TextField(obscureText: true, style: const TextStyle(color: Colors.white), decoration: _input("Password")),
+                  TextField(controller: _passwordController, obscureText: true, style: const TextStyle(color: Colors.white), decoration: _input("Password")),
                   const SizedBox(height: 30),
                   _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
